@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block body %}
+  <div class="row">
+    <h1 class="text-center">{{models[name].title}}</h1>
+    <div class="col-md-6 offset-md-3">
+        {% if prediction==0 or prediction==2%}
+        <div class="alert alert-success" role="alert">
+          <h1>Result: {{models[name].result_no}}</h1>
+        </div>
+        {% endif %}
+        {% if prediction==1%}
+              <div class="alert alert-danger" role="alert">
+                <h1>Result: {{models[name].result_yes}}</h1>
+              </div>
+        {% endif %}
+
+        <form action="/predictor/{{name}}" method="post">
+
+            {% for attribute in models[name].attributes %}
+            
+            {% if attribute=='Gender' %}
+
+            <div class="mb-3">
+              <label class="form-label" for="{{attribute}}">{{attribute}}</label>
+              <select class="form-select" aria-label="Default select example" name="{{attribute}}" id="{{attribute}}">
+                <option value="1">Male</option> 
+                <option value="0">Female</option>
+              </select>
+            </div>
+
+            {% elif attribute in categorical_columns%}
+
+            <div class="mb-3">
+            <label class="form-label" for="{{attribute}}">{{attribute}}</label>
+              <select class="form-select" aria-label="Default select example" name="{{attribute}}" id="{{attribute}}">
+                <option value="1">Yes</option> 
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            {% else %}
+            
+            <div class="mb-3">
+              <label class="form-label" for="{{attribute}}">{{attribute}}</label>
+              <input type="text" class="form-control" id="{{attribute}}" name="{{attribute}}" required/>
+            </div>
+
+            {% endif %}
+    
+            {% endfor%}
+              
+            <div class="mb-3">
+              <button class="btn btn-success">Predict</button>
+            </div>
+        </form>
+    </div>
+  </div>
+{% endblock body %}
